@@ -1,4 +1,4 @@
-package go_crypto
+package main
 
 import "errors"
 
