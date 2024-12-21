@@ -5,10 +5,19 @@ import (
 	"encoding/hex"
 )
 
-// GenerateRandomString generates a random string of the specified length
-func GenerateRandomString(length int) (string, error) {
+// GenerateRandomBytes generates a random byte slice of the specified length
+func GenerateRandomBytes(length int) ([]byte, error) {
 	bytes := make([]byte, length)
 	_, err := rand.Read(bytes)
+	if err != nil {
+		return nil, err
+	}
+	return bytes, nil
+}
+
+// GenerateRandomString generates a random string of the specified length
+func GenerateRandomString(length int) (string, error) {
+	bytes, err := GenerateRandomBytes(length)
 	if err != nil {
 		return "", err
 	}
