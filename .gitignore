@@ -18,5 +18,5 @@
 /**/*.sh
 /**/*.bat
 
-# main.go files
-/**/*/main.go
+# main.go file
+/main.go
