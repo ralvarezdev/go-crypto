@@ -17,6 +17,3 @@
 /**/*.cmd
 /**/*.sh
 /**/*.bat
-
-# main.go file
-/main.go
