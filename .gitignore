@@ -17,3 +17,6 @@
 /**/*.cmd
 /**/*.sh
 /**/*.bat
+
+# main.go files
+/**/*/main.go
