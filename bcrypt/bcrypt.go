@@ -12,7 +12,7 @@ func HashPassword(password string) (string, error) {
 		[]byte(password), bcrypt.DefaultCost,
 	)
 	if err != nil {
-		return "", gocrypto.FailedToHashPasswordError
+		return "", gocrypto.ErrFailedToHashPassword
 	}
 
 	return string(hash), nil
