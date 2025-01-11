@@ -75,7 +75,10 @@ func NewSecret(length int) (string, error) {
 }
 
 // ComputeHMAC computes the HMAC with a secret, a message value and a hash function
-func ComputeHMAC(secret string, msg uint64, hashFn func() hash.Hash) ([]byte, error) {
+func ComputeHMAC(secret string, msg uint64, hashFn func() hash.Hash) (
+	[]byte,
+	error,
+) {
 	// Decode the base32 value with no padding
 	secret = strings.ToUpper(secret)
 	secretByte, err := base32.StdEncoding.WithPadding(base32.NoPadding).DecodeString(secret)
@@ -97,7 +100,12 @@ func ComputeHMAC(secret string, msg uint64, hashFn func() hash.Hash) ([]byte, er
 }
 
 // ComputeTimedHMAC computes the HMAC hash with a secret, a time value, a time step and a hash function
-func ComputeTimedHMAC(secret string, time time.Time, period uint64, hashFn func() hash.Hash) ([]byte, error) {
+func ComputeTimedHMAC(
+	secret string,
+	time time.Time,
+	period uint64,
+	hashFn func() hash.Hash,
+) ([]byte, error) {
 	// Compute the message value
 	msg := uint64(time.Unix()) / period
 
@@ -106,14 +114,21 @@ func ComputeTimedHMAC(secret string, time time.Time, period uint64, hashFn func(
 }
 
 // ComputeTimedHMACSha1 computes the HMAC hash with a secret, a time value and a time step using SHA1
-func ComputeTimedHMACSha1(secret string, time time.Time, period uint64) ([]byte, error) {
+func ComputeTimedHMACSha1(secret string, time time.Time, period uint64) (
+	[]byte,
+	error,
+) {
 	return ComputeTimedHMAC(secret, time, period, sha1.New)
 }
 
 // Truncate truncates the hash to a digit count and returns the OTP. The digit count must be between 6 and 8
 func Truncate(hash []byte, digits int) (string, error) {
 	if digits < DigitCountStart || digits > DigitCountEnd {
-		return "", fmt.Errorf("digit count must be between %v and %v", DigitCountStart, DigitCountEnd)
+		return "", fmt.Errorf(
+			"digit count must be between %v and %v",
+			DigitCountStart,
+			DigitCountEnd,
+		)
 	}
 
 	// Calculate the offset from the last byte of the hash. The offset is the last 4 bits of the last byte
@@ -133,7 +148,12 @@ func Truncate(hash []byte, digits int) (string, error) {
 }
 
 // GenerateTOTPSha1 generates a TOTP with a secret, a time value, a time step and a digit count using SHA1
-func GenerateTOTPSha1(secret string, time time.Time, period uint64, digits int) (string, error) {
+func GenerateTOTPSha1(
+	secret string,
+	time time.Time,
+	period uint64,
+	digits int,
+) (string, error) {
 	// Compute the HMAC hash with SHA1
 	hmacHash, err := ComputeTimedHMACSha1(secret, time, period)
 	if err != nil {
@@ -142,4 +162,19 @@ func GenerateTOTPSha1(secret string, time time.Time, period uint64, digits int) 
 
 	// Truncate the hash to the digit count
 	return Truncate(hmacHash, digits)
+}
+
+// CompareTOTPSha1 compares a TOTP code with a secret, a time value, a time step and a digit count using SHA1
+func CompareTOTPSha1(
+	code, secret string,
+	time time.Time,
+	period uint64,
+	digits int,
+) (bool, error) {
+	// Generate the TOTP with the secret, time, period and digits
+	generatedCode, err := GenerateTOTPSha1(secret, time, period, digits)
+	if err != nil {
+		return false, err
+	}
+	return generatedCode == code, nil
 }

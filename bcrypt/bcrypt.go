@@ -28,8 +28,8 @@ func HashPassword(password string, cost int) (string, error) {
 	return string(hash), nil
 }
 
-// CheckPasswordHash checks if the password matches the hash
-func CheckPasswordHash(password string, hash string) bool {
+// CompareHashAndPassword compares a password with a hash
+func CompareHashAndPassword(hash string, password string) bool {
 	// Hash the password with SHA-256 if it is longer than 72 bytes
 	passwordBytes := []byte(password)
 	if len(passwordBytes) > 72 {
