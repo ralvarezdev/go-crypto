@@ -7,7 +7,7 @@ import (
 	"encoding/base32"
 	"encoding/binary"
 	"fmt"
-	gocryp
+	gocryptorandomutf8 "github.com/ralvarezdev/go-crypto/random/strings/utf8"
 	"hash"
 	"math"
 	"net/url"
