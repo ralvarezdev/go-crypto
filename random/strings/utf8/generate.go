@@ -27,7 +27,7 @@ func Generate(length int) (string, error) {
 }
 
 // GenerateN generates N random strings of the specified length
-func GenerateN(n, length int) ([]string, error) {
+func GenerateN(n, length int) (*[]string, error) {
 	strings := make([]string, n)
 	for i := 0; i < n; i++ {
 		randomString, err := Generate(length)
@@ -36,5 +36,5 @@ func GenerateN(n, length int) ([]string, error) {
 		}
 		strings[i] = randomString
 	}
-	return strings, nil
+	return &strings, nil
 }
