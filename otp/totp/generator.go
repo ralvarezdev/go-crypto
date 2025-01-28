@@ -21,40 +21,40 @@ import (
 
 // Url struct for the TOTP URL
 type Url struct {
-	BaseURL   string
-	Issuer    string
-	Algorithm string
-	Digits    int
-	Period    int
+	baseURL   string
+	issuer    string
+	algorithm string
+	digits    int
+	period    int
 }
 
 // NewUrl creates a new URL
 func NewUrl(issuer, algorithm string, digits, period int) *Url {
 	return &Url{
-		BaseURL:   BaseURL,
-		Issuer:    issuer,
-		Algorithm: algorithm,
-		Digits:    digits,
-		Period:    period,
+		baseURL:   BaseURL,
+		issuer:    issuer,
+		algorithm: algorithm,
+		digits:    digits,
+		period:    period,
 	}
 }
 
 // Generate generates a formatted URL with the hash and secret
 func (u *Url) Generate(secret, accountName string) (string, error) {
 	// Create the URL with query parameters
-	U, err := url.Parse(u.BaseURL)
+	U, err := url.Parse(u.baseURL)
 	if err != nil {
 		return "", err
 	}
 
 	// Set the path and query parameters
-	U.Path += fmt.Sprintf("/%s:%s", u.Issuer, accountName)
+	U.Path += fmt.Sprintf("/%s:%s", u.issuer, accountName)
 	q := U.Query()
 	q.Set("secret", secret)
-	q.Set("issuer", u.Issuer)
-	q.Set("algorithm", strings.ToUpper(u.Algorithm))
-	q.Set("digits", fmt.Sprintf("%d", u.Digits))
-	q.Set("period", fmt.Sprintf("%d", u.Period))
+	q.Set("issuer", u.issuer)
+	q.Set("algorithm", strings.ToUpper(u.algorithm))
+	q.Set("digits", fmt.Sprintf("%d", u.digits))
+	q.Set("period", fmt.Sprintf("%d", u.period))
 	U.RawQuery = q.Encode()
 
 	return U.String(), nil
