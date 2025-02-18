@@ -38,3 +38,8 @@ func GenerateN(n, length int) (*[]string, error) {
 	}
 	return &strings, nil
 }
+
+// GenerateRecoveryCodes generates recovery codes with a count and a length
+func GenerateRecoveryCodes(count, length int) (*[]string, error) {
+	return GenerateN(count, length)
+}
