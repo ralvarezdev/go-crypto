@@ -88,12 +88,21 @@ func EncryptCTR(plainText, key []byte) (*string, error) {
 		return nil, err
 	}
 
+	// Create a new IV for the CTR block cipher
+	iv := make([]byte, aes.BlockSize)
+	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
 	// Create a new CTR block cipher with the AES cipher block
-	ctr := cipher.NewCTR(block, key)
+	ctr := cipher.NewCTR(block, iv)
 
 	// Encrypt the plain text using the CTR block cipher
 	cipherText := make([]byte, len(plainText))
 	ctr.XORKeyStream(cipherText, plainText)
+
+	// Prepend the IV to the cipher text
+	cipherText = append(iv, cipherText...)
 
 	// Return the encrypted cipher text as a hexadecimal string
 	enc := hex.EncodeToString(cipherText)
@@ -114,14 +123,17 @@ func DecryptCTR(encryptedText *string, key []byte) (*string, error) {
 		return nil, err
 	}
 
-	// Create a new CTR block cipher with the AES cipher block
-	ctr := cipher.NewCTR(block, key)
-
 	// Decode the encrypted text from a hexadecimal string
 	cipherText, err := hex.DecodeString(*encryptedText)
 	if err != nil {
 		return nil, err
 	}
+
+	// Extract the IV from the cipher text
+	iv, cipherText := cipherText[:aes.BlockSize], cipherText[aes.BlockSize:]
+
+	// Create a new CTR block cipher with the AES cipher block
+	ctr := cipher.NewCTR(block, iv)
 
 	// Decrypt the encrypted text using the CTR block cipher
 	plainText := make([]byte, len(cipherText))
