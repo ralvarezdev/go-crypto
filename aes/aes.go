@@ -8,8 +8,8 @@ import (
 	"io"
 )
 
-// Encrypt encrypts a string using the AES algorithm
-func Encrypt(plainText, key []byte) (*string, error) {
+// EncryptGCM encrypts a string using the AES algorithm with the GCM block cipher mode
+func EncryptGCM(plainText, key []byte) (*string, error) {
 	// Create a new AES cipher block with the generated key
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -37,8 +37,8 @@ func Encrypt(plainText, key []byte) (*string, error) {
 	return &enc, nil
 }
 
-// Decrypt decrypts a string using the AES algorithm
-func Decrypt(encryptedText *string, key []byte) (*string, error) {
+// DecryptGCM decrypts a string using the AES algorithm with the GCM block cipher mode
+func DecryptGCM(encryptedText *string, key []byte) (*string, error) {
 	// Check if the encrypted text is nil
 	if encryptedText == nil {
 		return nil, ErrNilEncryptedText
@@ -73,6 +73,59 @@ func Decrypt(encryptedText *string, key []byte) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Return the decrypted plain text
+	dec := string(plainText)
+
+	return &dec, nil
+}
+
+// EncryptCTR encrypts a string using the AES algorithm with the CTR block cipher mode
+func EncryptCTR(plainText, key []byte) (*string, error) {
+	// Create a new AES cipher block with the generated key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a new CTR block cipher with the AES cipher block
+	ctr := cipher.NewCTR(block, key)
+
+	// Encrypt the plain text using the CTR block cipher
+	cipherText := make([]byte, len(plainText))
+	ctr.XORKeyStream(cipherText, plainText)
+
+	// Return the encrypted cipher text as a hexadecimal string
+	enc := hex.EncodeToString(cipherText)
+
+	return &enc, nil
+}
+
+// DecryptCTR decrypts a string using the AES algorithm with the CTR block cipher mode
+func DecryptCTR(encryptedText *string, key []byte) (*string, error) {
+	// Check if the encrypted text is nil
+	if encryptedText == nil {
+		return nil, ErrNilEncryptedText
+	}
+
+	// Create a new AES cipher block with the generated key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a new CTR block cipher with the AES cipher block
+	ctr := cipher.NewCTR(block, key)
+
+	// Decode the encrypted text from a hexadecimal string
+	cipherText, err := hex.DecodeString(*encryptedText)
+	if err != nil {
+		return nil, err
+	}
+
+	// Decrypt the encrypted text using the CTR block cipher
+	plainText := make([]byte, len(cipherText))
+	ctr.XORKeyStream(plainText, cipherText)
 
 	// Return the decrypted plain text
 	dec := string(plainText)
