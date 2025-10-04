@@ -35,5 +35,9 @@ func TestTOTPGenerator(secret string) {
 	// Generate a new TOTP code
 	currentTime := time.Now()
 	totpCode, _ = GenerateTOTPSha1(newSecret, currentTime, period, digits)
-	fmt.Printf("New TOTP code at %s: %s\n", currentTime.Format(time.RFC3339), totpCode)
+	fmt.Printf(
+		"New TOTP code at %s: %s\n",
+		currentTime.Format(time.RFC3339),
+		totpCode,
+	)
 }

@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+
 	gocrypto "github.com/ralvarezdev/go-crypto"
 	"golang.org/x/crypto/bcrypt"
 )
