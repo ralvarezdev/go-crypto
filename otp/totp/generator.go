@@ -18,14 +18,16 @@ import (
 // https://medium.com/@firateski/coding-totp-generator-with-go-a31668ef955e
 // https://medium.com/@nathanbcrocker/building-a-time-based-one-time-password-totp-generator-in-go-a-deep-dive-into-2fa-implementation-043c1000e09f
 
-// Url struct for the TOTP URL
-type Url struct {
-	baseURL   string
-	issuer    string
-	algorithm string
-	digits    int
-	period    int
-}
+type (
+	// Url struct for the TOTP URL
+	Url struct {
+		baseURL   string
+		issuer    string
+		algorithm string
+		digits    int
+		period    int
+	}
+)
 
 // NewUrl creates a new URL
 func NewUrl(issuer, algorithm string, digits, period int) *Url {
@@ -39,7 +41,7 @@ func NewUrl(issuer, algorithm string, digits, period int) *Url {
 }
 
 // Generate generates a formatted URL with the hash and secret
-func (u *Url) Generate(secret, accountName string) (string, error) {
+func (u Url) Generate(secret, accountName string) (string, error) {
 	// Create the URL with query parameters
 	U, err := url.Parse(u.baseURL)
 	if err != nil {
