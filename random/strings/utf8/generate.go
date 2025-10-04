@@ -44,9 +44,9 @@ func Generate(length int) (string, error) {
 //
 // Returns:
 //
-//   - *[]string: A pointer to a slice of generated random strings
+//   - []string: A slice of generated random strings
 //   - error: An error if something went wrong
-func GenerateN(n, length int) (*[]string, error) {
+func GenerateN(n, length int) ([]string, error) {
 	strings := make([]string, n)
 	for i := 0; i < n; i++ {
 		randomString, err := Generate(length)
@@ -55,7 +55,7 @@ func GenerateN(n, length int) (*[]string, error) {
 		}
 		strings[i] = randomString
 	}
-	return &strings, nil
+	return strings, nil
 }
 
 // GenerateRecoveryCodes generates recovery codes with a count and a length
@@ -67,8 +67,8 @@ func GenerateN(n, length int) (*[]string, error) {
 //
 // Returns:
 //
-//   - *[]string: A pointer to a slice of generated recovery codes
+//   - []string: A slice of generated recovery codes
 //   - error: An error if something went wrong
-func GenerateRecoveryCodes(count, length int) (*[]string, error) {
+func GenerateRecoveryCodes(count, length int) ([]string, error) {
 	return GenerateN(count, length)
 }
