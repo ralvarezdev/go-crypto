@@ -5,7 +5,11 @@ import (
 	"time"
 )
 
-// TestTOTPGenerator function
+// TestTOTPGenerator function to test the TOTP generator
+//
+// Parameters:
+//
+//   - secret: the secret key to generate the TOTP code
 func TestTOTPGenerator(secret string) {
 	// Constants
 	const (

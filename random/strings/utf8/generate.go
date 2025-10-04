@@ -11,6 +11,15 @@ var (
 )
 
 // Generate generates a random UTF-8 safe string of the specified length
+//
+// Parameters:
+//
+//   - length: The length of the random string to generate
+//
+// Returns:
+//
+//   - string: The generated random string
+//   - error: An error if something went wrong
 func Generate(length int) (string, error) {
 	result := make([]byte, length)
 	for i := range result {
@@ -27,6 +36,16 @@ func Generate(length int) (string, error) {
 }
 
 // GenerateN generates N random strings of the specified length
+//
+// Parameters:
+//
+//   - n: The number of random strings to generate
+//   - length: The length of each random string to generate
+//
+// Returns:
+//
+//   - *[]string: A pointer to a slice of generated random strings
+//   - error: An error if something went wrong
 func GenerateN(n, length int) (*[]string, error) {
 	strings := make([]string, n)
 	for i := 0; i < n; i++ {
@@ -40,6 +59,16 @@ func GenerateN(n, length int) (*[]string, error) {
 }
 
 // GenerateRecoveryCodes generates recovery codes with a count and a length
+//
+// Parameters:
+//
+//   - count: The number of recovery codes to generate
+//   - length: The length of each recovery code to generate
+//
+// Returns:
+//
+//   - *[]string: A pointer to a slice of generated recovery codes
+//   - error: An error if something went wrong
 func GenerateRecoveryCodes(count, length int) (*[]string, error) {
 	return GenerateN(count, length)
 }

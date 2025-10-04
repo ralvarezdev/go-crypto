@@ -9,6 +9,16 @@ import (
 )
 
 // EncryptGCM encrypts a string using the AES algorithm with the GCM block cipher mode
+//
+// Parameters:
+//
+//   - plainText: The plain text to encrypt
+//   - key: The key to use for encryption (must be 16, 24 or 32 bytes long)
+//
+// Returns:
+//
+//   - A pointer to the encrypted string in hexadecimal format
+//   - An error if any occurred during the encryption process
 func EncryptGCM(plainText, key []byte) (*string, error) {
 	// Create a new AES cipher block with the generated key
 	block, err := aes.NewCipher(key)
@@ -38,6 +48,16 @@ func EncryptGCM(plainText, key []byte) (*string, error) {
 }
 
 // DecryptGCM decrypts a string using the AES algorithm with the GCM block cipher mode
+//
+// Parameters:
+//
+// - encryptedText: A pointer to the encrypted string in hexadecimal format
+// - key: The key to use for decryption (must be 16, 24 or 32 bytes long)
+//
+// Returns:
+//
+// - A pointer to the decrypted plain text string
+// - An error if any occurred during the decryption process
 func DecryptGCM(encryptedText *string, key []byte) (*string, error) {
 	// Check if the encrypted text is nil
 	if encryptedText == nil {
@@ -81,6 +101,16 @@ func DecryptGCM(encryptedText *string, key []byte) (*string, error) {
 }
 
 // EncryptCTR encrypts a string using the AES algorithm with the CTR block cipher mode
+//
+// Parameters:
+//
+// - plainText: The plain text to encrypt
+// - key: The key to use for encryption (must be 16, 24 or 32 bytes long)
+//
+// Returns:
+//
+// - A pointer to the encrypted string in hexadecimal format
+// - An error if any occurred during the encryption process
 func EncryptCTR(plainText, key []byte) (*string, error) {
 	// Create a new AES cipher block with the generated key
 	block, err := aes.NewCipher(key)
@@ -111,6 +141,16 @@ func EncryptCTR(plainText, key []byte) (*string, error) {
 }
 
 // DecryptCTR decrypts a string using the AES algorithm with the CTR block cipher mode
+//
+// Parameters:
+//
+// - encryptedText: A pointer to the encrypted string in hexadecimal format
+// - key: The key to use for decryption (must be 16, 24 or 32 bytes long)
+//
+// Returns:
+//
+// - A pointer to the decrypted plain text string
+// - An error if any occurred during the decryption process
 func DecryptCTR(encryptedText *string, key []byte) (*string, error) {
 	// Check if the encrypted text is nil
 	if encryptedText == nil {
