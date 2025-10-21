@@ -7,8 +7,8 @@ import (
 )
 
 type (
-	// Url struct for the TOTP URL
-	Url struct {
+	// URL struct for the TOTP URL
+	URL struct {
 		baseURL   string
 		issuer    string
 		algorithm string
@@ -17,7 +17,7 @@ type (
 	}
 )
 
-// NewUrl creates a new URL
+// NewURL creates a new URL
 //
 // Parameters:
 //
@@ -28,9 +28,9 @@ type (
 //
 // Returns:
 //
-// - *Url: the created URL
-func NewUrl(issuer, algorithm string, digits, period int) *Url {
-	return &Url{
+// - *URL: the created URL
+func NewURL(issuer, algorithm string, digits, period int) *URL {
+	return &URL{
 		baseURL:   BaseURL,
 		issuer:    issuer,
 		algorithm: algorithm,
@@ -50,7 +50,7 @@ func NewUrl(issuer, algorithm string, digits, period int) *Url {
 //
 // - string: the generated URL
 // - error: if any error occurs during the process
-func (u Url) Generate(secret, accountName string) (string, error) {
+func (u URL) Generate(secret, accountName string) (string, error) {
 	// Create the URL with query parameters
 	U, err := url.Parse(u.baseURL)
 	if err != nil {

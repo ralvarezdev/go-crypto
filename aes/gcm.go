@@ -34,8 +34,8 @@ func EncryptGCM(plainText, key []byte) (*string, error) {
 
 	// Create a new nonce for the GCM block cipher
 	nonce := make([]byte, gcm.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, err
+	if _, readErr := io.ReadFull(rand.Reader, nonce); readErr != nil {
+		return nil, readErr
 	}
 
 	// Encrypt the plain text using the GCM block cipher

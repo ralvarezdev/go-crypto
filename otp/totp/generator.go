@@ -82,7 +82,7 @@ func ComputeHMAC(secret string, msg uint64, hashFn func() hash.Hash) (
 // Parameters:
 //
 // - secret: the secret used to compute the HMAC hash
-// - time: the time value used to compute the HMAC hash
+// - computeTime: the time value used to compute the HMAC hash
 // - period: the time step used to compute the HMAC hash
 // - hashFn: the hash function used to compute the HMAC hash
 //
@@ -92,12 +92,12 @@ func ComputeHMAC(secret string, msg uint64, hashFn func() hash.Hash) (
 // - error: if any error occurs during the process
 func ComputeTimedHMAC(
 	secret string,
-	time time.Time,
+	computeTime time.Time,
 	period uint64,
 	hashFn func() hash.Hash,
 ) ([]byte, error) {
 	// Compute the message value
-	msg := uint64(time.Unix()) / period
+	msg := uint64(computeTime.Unix()) / period
 
 	// Compute the HMAC hash
 	return ComputeHMAC(secret, msg, hashFn)
@@ -108,32 +108,32 @@ func ComputeTimedHMAC(
 // Parameters:
 //
 // - secret: the secret used to compute the HMAC hash
-// - time: the time value used to compute the HMAC hash
+// - computeTime: the time value used to compute the HMAC hash
 // - period: the time step used to compute the HMAC hash
 //
 // Returns:
 //
 // - []byte: the computed HMAC hash
 // - error: if any error occurs during the process
-func ComputeTimedHMACSha1(secret string, time time.Time, period uint64) (
+func ComputeTimedHMACSha1(secret string, computeTime time.Time, period uint64) (
 	[]byte,
 	error,
 ) {
-	return ComputeTimedHMAC(secret, time, period, sha1.New)
+	return ComputeTimedHMAC(secret, computeTime, period, sha1.New)
 }
 
 // Truncate truncates the hash to a digit count and returns the OTP. The digit count must be between 6 and 8
 //
 // Parameters:
 //
-// - hash: the hash to truncate
+// - truncateHash: the hash to truncate
 // - digits: the digit count to truncate the hash to
 //
 // Returns:
 //
 // - string: the truncated OTP
 // - error: if any error occurs during the process
-func Truncate(hash []byte, digits int) (string, error) {
+func Truncate(truncateHash []byte, digits int) (string, error) {
 	if digits < DigitCountStart || digits > DigitCountEnd {
 		return "", fmt.Errorf(
 			"digit count must be between %v and %v",
@@ -143,10 +143,18 @@ func Truncate(hash []byte, digits int) (string, error) {
 	}
 
 	// Calculate the offset from the last byte of the hash. The offset is the last 4 bits of the last byte
-	offset := uintptr(hash[len(hash)-1] & 0xf)
+	offset := uintptr(truncateHash[len(truncateHash)-1] & 0xf)
 
 	// Extract 4 bytes from the hash starting from the calculated offset
-	extractedValue := int(hash[offset])<<24 | int(hash[offset+1])<<16 | int(hash[offset+2])<<8 | int(hash[offset+3])
+	extractedValue := int(
+		truncateHash[offset],
+	)<<24 | int(
+		truncateHash[offset+1],
+	)<<16 | int(
+		truncateHash[offset+2],
+	)<<8 | int(
+		truncateHash[offset+3],
+	)
 
 	// Ensure the extracted value is positive by BITWISE AND operation
 	extractedPositiveValue := int64(extractedValue & 0x7fffffff)
@@ -163,7 +171,7 @@ func Truncate(hash []byte, digits int) (string, error) {
 // Parameters:
 //
 // - secret: the secret used to generate the TOTP code
-// - time: the time value used to generate the TOTP code
+// - computeTime: the time value used to generate the TOTP code
 // - period: the time step used to generate the TOTP code
 // - digits: the digit count used to generate the TOTP code
 //
@@ -173,12 +181,12 @@ func Truncate(hash []byte, digits int) (string, error) {
 // - error: if any error occurs during the process
 func GenerateTOTPSha1(
 	secret string,
-	time time.Time,
+	computeTime time.Time,
 	period uint64,
 	digits int,
 ) (string, error) {
 	// Compute the HMAC hash with SHA1
-	hmacHash, err := ComputeTimedHMACSha1(secret, time, period)
+	hmacHash, err := ComputeTimedHMACSha1(secret, computeTime, period)
 	if err != nil {
 		return "", err
 	}
@@ -193,7 +201,7 @@ func GenerateTOTPSha1(
 //
 //   - code: the TOTP code to compare
 //   - secret: the secret used to generate the TOTP code
-//   - time: the time value used to generate the TOTP code
+//   - computeTime: the time value used to generate the TOTP code
 //   - period: the time step used to generate the TOTP code
 //   - digits: the digit count used to generate the TOTP code
 //
@@ -203,12 +211,12 @@ func GenerateTOTPSha1(
 //   - error: if any error occurs during the process
 func CompareTOTPSha1(
 	code, secret string,
-	time time.Time,
+	computeTime time.Time,
 	period uint64,
 	digits int,
 ) (bool, error) {
 	// Generate the TOTP with the secret, time, period and digits
-	generatedCode, err := GenerateTOTPSha1(secret, time, period, digits)
+	generatedCode, err := GenerateTOTPSha1(secret, computeTime, period, digits)
 	if err != nil {
 		return false, err
 	}

@@ -5,8 +5,9 @@ import (
 	"encoding/hex"
 	"errors"
 
-	gocrypto "github.com/ralvarezdev/go-crypto"
 	"golang.org/x/crypto/bcrypt"
+
+	gocrypto "github.com/ralvarezdev/go-crypto"
 )
 
 // HashPassword hashes a password using bcrypt
@@ -25,7 +26,7 @@ func HashPassword(password string, cost int) (string, error) {
 	passwordBytes := []byte(password)
 	if len(passwordBytes) > 72 {
 		passwordHash := sha256.Sum256(passwordBytes)
-		password = hex.EncodeToString(passwordHash[:])
+		passwordBytes = []byte(hex.EncodeToString(passwordHash[:]))
 	}
 
 	// Generate the hash
@@ -49,20 +50,17 @@ func HashPassword(password string, cost int) (string, error) {
 // Returns:
 //
 //   - true if the password matches the hash, false otherwise
-func CompareHashAndPassword(hash string, password string) bool {
+func CompareHashAndPassword(hash, password string) bool {
 	// Hash the password with SHA-256 if it is longer than 72 bytes
 	passwordBytes := []byte(password)
 	if len(passwordBytes) > 72 {
 		passwordHash := sha256.Sum256(passwordBytes)
-		password = hex.EncodeToString(passwordHash[:])
+		passwordBytes = []byte(hex.EncodeToString(passwordHash[:]))
 	}
 
 	// Compare the password with the hash
 	err := bcrypt.CompareHashAndPassword([]byte(hash), passwordBytes)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 // IsHashed checks if a string is a bcrypt hash

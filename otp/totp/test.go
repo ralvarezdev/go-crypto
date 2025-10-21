@@ -18,27 +18,47 @@ func TestTOTPGenerator(secret string) {
 	)
 
 	// Create a new TOTP URL
-	totpUrl := NewUrl("ralvarezdev", "sha1", digits, period)
+	totpURL := NewURL("ralvarezdev", "sha1", digits, period)
 
 	// Generate a new TOTP URL based on the secret
-	formattedURL, _ := totpUrl.Generate(secret, "test")
+	formattedURL, err := totpURL.Generate(secret, "test")
+	if err != nil {
+		fmt.Printf("Error generating TOTP URL: %v\n", err)
+		return
+	}
 	fmt.Printf("Secret TOTP URL: %s\n", formattedURL)
 
 	// Generate a new TOTP code based on the secret
-	totpCode, _ := GenerateTOTPSha1(secret, time.Now(), period, digits)
+	totpCode, err := GenerateTOTPSha1(secret, time.Now(), period, digits)
+	if err != nil {
+		fmt.Printf("Error generating TOTP code: %v\n", err)
+		return
+	}
 	fmt.Printf("Secret '%s' TOTP code: %s\n", secret, totpCode)
 
 	// Generate a new TOTP secret
-	newSecret, _ := NewSecret(32)
+	newSecret, err := NewSecret(32)
+	if err != nil {
+		fmt.Printf("Error generating new TOTP secret: %v\n", err)
+		return
+	}
 	fmt.Printf("New TOTP secret: %s\n", newSecret)
 
 	// Generate a new TOTP URL with the secret
-	formattedURL, _ = totpUrl.Generate(newSecret, "test")
+	formattedURL, err = totpURL.Generate(newSecret, "test")
+	if err != nil {
+		fmt.Printf("Error generating new TOTP URL: %v\n", err)
+		return
+	}
 	fmt.Printf("New TOTP URL: %s\n", formattedURL)
 
 	// Generate a new TOTP code
 	currentTime := time.Now()
-	totpCode, _ = GenerateTOTPSha1(newSecret, currentTime, period, digits)
+	totpCode, err = GenerateTOTPSha1(newSecret, currentTime, period, digits)
+	if err != nil {
+		fmt.Printf("Error generating new TOTP code: %v\n", err)
+		return
+	}
 	fmt.Printf(
 		"New TOTP code at %s: %s\n",
 		currentTime.Format(time.RFC3339),
