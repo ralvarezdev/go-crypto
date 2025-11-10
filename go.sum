@@ -1,2 +1,4 @@
+github.com/ralvarezdev/go-strings v0.2.3 h1:LNmfh75ggwzO89dwh9dRYY4UlVIe2HSAEnu2G5NXKJc=
+github.com/ralvarezdev/go-strings v0.2.3/go.mod h1:8sFOqmPJpqzS7bTjf91EzUCITnwpmkfifwY80GxV5r8=
 golang.org/x/crypto v0.43.0 h1:dduJYIi3A3KOfdGOHX8AVZ/jGiyPa3IbBozJ5kNuE04=
 golang.org/x/crypto v0.43.0/go.mod h1:BFbav4mRNlXJL4wNeejLpWxB7wMbc79PdRGhWKncxR0=
